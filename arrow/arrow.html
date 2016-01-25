@@ -1,0 +1,38 @@
+<head>
+  <title>arrow</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Arrow!</h1>
+
+      {{ > login }}
+
+    </header>
+
+  {{ #if isUserLoggedIn }}
+
+    <ul>
+    {{#each friends}}
+      {{ > friendList }}
+    {{/each}}
+    </ul>
+  {{ /if }}
+
+  </div>
+</body>
+
+<template name="login">
+  {{ #if isUserLoggedIn }}
+    Welcome {{ currentUserName }}
+    <img class="user-pro-pic" src="{{ currentUserProPic }}">
+    <button class="logout-button">Logout</button>
+  {{ else }}
+    <button class="login-button">Login with Facebook</button>
+  {{ /if }}
+</template>
+
+<template name="friendList">
+    <li>{{name}}</li>
+</template>
