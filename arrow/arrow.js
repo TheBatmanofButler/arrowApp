@@ -15,11 +15,15 @@ var currentUserDep = new Tracker.Dependency();
 if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish tasks that are public or belong to the current user
-
+  Meteor.publish("friends", function () {
+    return Friends.find();
+  });
 }
 
 if (Meteor.isClient) {
   // This code only runs on the client
+
+  Meteor.subscribe("friends");
 
   window.fbAsyncInit = function() {
     console.log("fb initializing...");
@@ -40,7 +44,6 @@ if (Meteor.isClient) {
         FB.api('/', 'POST', {
             batch: [
               { method: 'GET', relative_url: 'me/friends'},
-              { method: "GET", relative_url: currentUserData.userID + '/picture'},
               { method: "GET", relative_url: currentUserData.userID},
             ]
           },
@@ -52,11 +55,12 @@ if (Meteor.isClient) {
                   Friends.insert({
                     name: friend.name,
                     id: friend.id,
+                    proPicURL: "https://graph.facebook.com/" + friend.id + "/picture"
                   });
                 }
 
-                currentUserData.proPicURL = response[1].headers[3].value;
-                currentUserData.name = JSON.parse(response[2].body).name;
+                currentUserData.proPicURL = "https://graph.facebook.com/" + currentUserData.userID + "/picture";
+                currentUserData.name = JSON.parse(response[1].body).name;
 
                 currentUserDep.changed();
               }
@@ -137,11 +141,21 @@ Meteor.methods({
 
   fbLogout: function() {
     if (isFBinit){
-      console.log('logged out');
+
+      // var allFriends = Friends.find().fetch();
+
+      // // Friends.remove({});
+      // // for (var eachObj in allFriends) {
+      // //   Friends.remove({_id: allFriends[eachObj]._id});
+      // //   // console.log(allFriends[eachObj]);
+      // //   console.log(Friends.find().fetch());
+
+      // // }
 
       FB.logout();
       currentUserData.loginStatus = false;
       currentUserDep.changed();
+      console.log('logged out');
     }
   }
 
