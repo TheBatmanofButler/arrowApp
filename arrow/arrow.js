@@ -18,6 +18,7 @@ if (Meteor.isServer) {
   Meteor.publish("friends", function () {
     return Friends.find();
   });
+  
 }
 
 if (Meteor.isClient) {
@@ -141,16 +142,6 @@ Meteor.methods({
 
   fbLogout: function() {
     if (isFBinit){
-
-      // var allFriends = Friends.find().fetch();
-
-      // // Friends.remove({});
-      // // for (var eachObj in allFriends) {
-      // //   Friends.remove({_id: allFriends[eachObj]._id});
-      // //   // console.log(allFriends[eachObj]);
-      // //   console.log(Friends.find().fetch());
-
-      // // }
 
       FB.logout();
       currentUserData.loginStatus = false;
